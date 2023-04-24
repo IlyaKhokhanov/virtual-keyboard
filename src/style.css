@@ -1,0 +1,33 @@
+.main {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.header,
+.description,
+.language {
+  text-align: center;
+}
+
+.textarea {
+  display: block;
+  width: 760px;
+  height: 220px;
+  margin: 5px auto;
+  padding: 5px;
+  font-size: 16px;
+  color: #444444;
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 5px;
+  width: 750px;
+  margin: 0 auto;
+  padding: 5px;
+  background: #777;
+  border: 2px solid #000;
+  border-radius: 10px;
+}
