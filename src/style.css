@@ -43,6 +43,7 @@
   border-radius: 5px;
   color: #fff;
   cursor: pointer;
+  font-size: 18px;
   transition: all 0.3s ease;
 }
 
@@ -50,14 +51,15 @@
   background: rgba(190, 190, 190, 0.5);
 }
 
-.key:active {
-  background: rgba(170, 170, 170, 1);
-  border-radius: 25px;
-}
-
 .spec {
   background-color: #000;
   font-weight: bold;
+}
+
+.key:active,
+.active {
+  background: rgba(170, 170, 170, 1);
+  border-radius: 25px;
 }
 
 .backspace {

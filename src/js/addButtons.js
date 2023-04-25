@@ -1,3 +1,5 @@
+import { addKeyboadActions } from '../app.js';
+
 export function addButtons(data, language, capsLock, shift) {
   const keyboard = document.querySelector('.keyboard');
 
@@ -13,6 +15,17 @@ export function addButtons(data, language, capsLock, shift) {
     if (item.class) {
       item.class.forEach((classItem) => {
         key.classList.add(classItem);
+        if (capsLock) {
+          if (classItem === 'caps-lock') {
+            key.classList.add('active');
+          }
+        }
+
+        if (shift) {
+          if (classItem === 'shift-left') {
+            key.classList.add('active');
+          }
+        }
       });
     }
     if (shift) {
@@ -25,4 +38,5 @@ export function addButtons(data, language, capsLock, shift) {
 
     keyboard.append(key);
   });
+  addKeyboadActions();
 }
