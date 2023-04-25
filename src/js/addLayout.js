@@ -1,4 +1,4 @@
-export default function addLayout() {
+export function addLayout() {
   const main = document.createElement('main');
   main.classList.add('main');
 

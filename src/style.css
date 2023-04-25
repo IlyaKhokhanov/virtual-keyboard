@@ -31,3 +31,67 @@
   border: 2px solid #000;
   border-radius: 10px;
 }
+
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  background: #333;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.key:hover {
+  background: rgba(190, 190, 190, 0.5);
+}
+
+.key:active {
+  background: rgba(170, 170, 170, 1);
+  border-radius: 25px;
+}
+
+.spec {
+  background-color: #000;
+  font-weight: bold;
+}
+
+.backspace {
+  width: 90px;
+}
+
+.tab {
+  width: 39px;
+}
+
+.delete {
+  width: 36px;
+}
+
+.caps-lock {
+  width: 93px;
+}
+
+.enter {
+  width: 82px;
+}
+
+.shift-left {
+  width: 95px;
+}
+
+.shift-right {
+  width: 80px;
+}
+
+.space {
+  width: 345px;
+}
+
+.ctrl-right {
+  width: 30px;
+}
