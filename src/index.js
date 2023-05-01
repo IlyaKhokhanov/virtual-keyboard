@@ -2,6 +2,7 @@ import { addButtons } from './js/addButtons.js';
 import { addLayout } from './js/addLayout.js';
 import { controlListeners } from './js/utilits.js';
 import data from './js/data.js';
+import './style.css';
 
 let language = localStorage.getItem('lang') || 'en';
 let isCapsLock = false;
@@ -19,7 +20,6 @@ export function addKeyboadActions() {
   const alt = buttons.find((but) => but.dataset.code.includes('AltLeft'));
   let listeners = [];
 
-  // caretPos = textarea.selectionEnd;
   let textareaLength = textarea.value.length;
 
   function keydownHandler(e) {
@@ -131,8 +131,8 @@ export function addKeyboadActions() {
 
     if (target) {
       if (
-        target.classList.contains('char') ||
-        target.classList.contains('digit')
+        target.classList.contains('char')
+        || target.classList.contains('digit')
       ) {
         textarea.value = startInput + target.textContent + endInput;
       }

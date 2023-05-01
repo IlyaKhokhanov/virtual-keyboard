@@ -1,4 +1,4 @@
-import { addKeyboadActions } from './../app.js';
+import { addKeyboadActions } from '../index.js';
 
 export function addButtons(data, language, capsLock, leftShift, rightShift) {
   const keyboard = document.querySelector('.keyboard');
