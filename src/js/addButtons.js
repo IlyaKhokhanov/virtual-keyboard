@@ -1,6 +1,6 @@
-import { addKeyboadActions } from '../app.js';
+import { addKeyboadActions } from './../app.js';
 
-export function addButtons(data, language, capsLock, shift) {
+export function addButtons(data, language, capsLock, leftShift, rightShift) {
   const keyboard = document.querySelector('.keyboard');
 
   keyboard.innerHTML = '';
@@ -15,20 +15,24 @@ export function addButtons(data, language, capsLock, shift) {
     if (item.class) {
       item.class.forEach((classItem) => {
         key.classList.add(classItem);
-        if (capsLock) {
-          if (classItem === 'caps-lock') {
+        if (classItem === 'caps-lock') {
+          if (capsLock) {
             key.classList.add('active');
           }
         }
-
-        if (shift) {
-          if (classItem === 'shift-left') {
+        if (classItem === 'shift-left') {
+          if (leftShift) {
+            key.classList.add('active');
+          }
+        }
+        if (classItem === 'shift-right') {
+          if (rightShift) {
             key.classList.add('active');
           }
         }
       });
     }
-    if (shift) {
+    if (leftShift || rightShift) {
       key.textContent = language === 'en' ? item.shift.en : item.shift.ru;
     } else if (capsLock) {
       key.textContent = language === 'en' ? item.caps.en : item.caps.ru;

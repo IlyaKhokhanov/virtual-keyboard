@@ -1,23 +1,19 @@
-export function addLayout() {
-  const main = document.createElement('main');
-  main.classList.add('main');
+import { addElement } from './utilits.js';
 
-  const header = document.createElement('h1');
-  header.classList.add('header');
+export function addLayout() {
+  const main = addElement('main', 'main');
+
+  const header = addElement('h1', 'header');
   header.textContent = 'RSS Virtual Keyboard';
 
-  const textarea = document.createElement('textarea');
-  textarea.classList.add('textarea');
+  const textarea = addElement('textarea', 'textarea');
 
-  const keyboard = document.createElement('div');
-  keyboard.classList.add('keyboard');
+  const keyboard = addElement('div', 'keyboard');
 
-  const description = document.createElement('p');
-  description.classList.add('description');
+  const description = addElement('p', 'description');
   description.textContent = 'Клавиатура создана в операционной системе Windows';
 
-  const language = document.createElement('p');
-  language.classList.add('language');
+  const language = addElement('p', 'language');
   language.textContent = 'Для переключения языка комбинация: ctrl + alt';
 
   document.body.append(main);

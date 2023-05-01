@@ -1,120 +1,213 @@
 import { addButtons } from './js/addButtons.js';
 import { addLayout } from './js/addLayout.js';
-import data from './js/data.json' assert { type: 'json' };
+import { controlListeners } from './js/utilits.js';
+import data from './js/data.js';
 
-let language = 'en';
+let language = localStorage.getItem('lang') || 'en';
 let isCapsLock = false;
-let isShift = false;
+let isLeftShift = false;
+let isRightShift = false;
 let caretPos = 0;
 
 addLayout();
-addButtons(data, language, isCapsLock, isShift);
+addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
 
 export function addKeyboadActions() {
   const textarea = document.querySelector('.textarea');
   const buttons = Array.from(document.querySelectorAll('[data-code]'));
+  const ctrl = buttons.find((but) => but.dataset.code.includes('ControlLeft'));
+  const alt = buttons.find((but) => but.dataset.code.includes('AltLeft'));
+  let listeners = [];
 
-  document.addEventListener('keydown', keydownHandler);
-  document.addEventListener('keyup', keyupHandler);
-
-  caretPos = textarea.selectionEnd;
+  // caretPos = textarea.selectionEnd;
   let textareaLength = textarea.value.length;
 
   function keydownHandler(e) {
     e.preventDefault();
 
-    const button = buttons.find((but) => but.dataset.code.includes(e.code));
-    const ctrl = buttons.find((but) =>
-      but.dataset.code.includes('ControlLeft')
-    );
-    const alt = buttons.find((but) => but.dataset.code.includes('AltLeft'));
+    const btn = buttons.find((but) => but.dataset.code.includes(e.code));
 
-    caretPos = textarea.selectionEnd;
     textareaLength = textarea.value.length;
+    caretPos = textarea.selectionStart;
+    textarea.setSelectionRange(caretPos, caretPos);
 
-    if (button) {
-      button.classList.add('active');
+    let startInput = textarea.value.slice(0, caretPos);
+    let endInput = textarea.value.slice(caretPos, textareaLength);
 
-      if (
-        button.classList.contains('char') ||
-        button.classList.contains('digit')
-      ) {
-        let startInput = textarea.value.slice(0, caretPos);
-        let endInput = textarea.value.slice(caretPos, textareaLength);
-        textarea.value = startInput + button.textContent + endInput;
+    if (btn) {
+      const btnCode = btn.dataset.code;
+
+      btn.classList.add('active');
+
+      if (btn.classList.contains('char') || btn.classList.contains('digit')) {
+        textarea.value = startInput + btn.textContent + endInput;
       }
 
-      if (button.dataset.code === 'Tab') {
-        let startInput = textarea.value.slice(0, caretPos);
-        let endInput = textarea.value.slice(caretPos, textareaLength);
-        textarea.value = startInput + '  ' + endInput;
+      if (btnCode === 'Tab') {
+        textarea.value = `${startInput}  ${endInput}`;
       }
 
-      if (button.dataset.code === 'Enter') {
-        let startInput = textarea.value.slice(0, caretPos);
-        let endInput = textarea.value.slice(caretPos, textareaLength);
-        textarea.value = startInput + '\n' + endInput;
+      if (btnCode === 'Enter') {
+        textarea.value = `${startInput}\n${endInput}`;
       }
 
-      if (button.dataset.code === 'Backspace') {
-        let startInput = textarea.value.slice(0, caretPos - 1);
-        let endInput = textarea.value.slice(caretPos, textareaLength);
+      if (btnCode === 'Backspace') {
+        startInput = textarea.value.slice(0, caretPos - 1);
         textarea.value = startInput + endInput;
       }
 
-      if (button.dataset.code === 'Delete') {
-        let startInput = textarea.value.slice(0, caretPos);
-        let endInput = textarea.value.slice(caretPos + 1, textareaLength);
+      if (btnCode === 'Delete') {
+        endInput = textarea.value.slice(caretPos + 1, textareaLength);
         textarea.value = startInput + endInput;
       }
 
-      if (
-        button.classList.contains('shift-right') ||
-        button.classList.contains('shift-left')
-      ) {
-        document.removeEventListener('keydown', keydownHandler);
-        document.removeEventListener('keyup', keyupHandler);
+      if (btn.classList.contains('shift-left')) {
+        controlListeners('remove', listeners);
 
-        isShift = true;
-        addButtons(data, language, isCapsLock, isShift);
+        isLeftShift = true;
+        addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
       }
 
-      if (
-        ctrl.classList.contains('active') &&
-        alt.classList.contains('active')
-      ) {
-        document.removeEventListener('keydown', keydownHandler);
-        document.removeEventListener('keyup', keyupHandler);
+      if (btn.classList.contains('shift-right')) {
+        controlListeners('remove', listeners);
 
-        language = language === 'en' ? 'ru' : 'en';
-        addButtons(data, language, isCapsLock, isShift);
+        isRightShift = true;
+        addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
       }
     }
   }
 
   function keyupHandler(e) {
     e.preventDefault();
-    const button = buttons.find((but) => but.dataset.code.includes(e.code));
+    const btn = buttons.find((but) => but.dataset.code.includes(e.code));
 
-    if (button.dataset.code === 'CapsLock') {
-      document.removeEventListener('keydown', keydownHandler);
-      document.removeEventListener('keyup', keyupHandler);
+    if (ctrl.classList.contains('active') && alt.classList.contains('active')) {
+      controlListeners('remove', listeners);
 
-      isCapsLock = isCapsLock ? false : true;
-      addButtons(data, language, isCapsLock, isShift);
-    } else {
-      button.classList.remove('active');
+      language = language === 'en' ? 'ru' : 'en';
+      addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+
+      localStorage.setItem('lang', language);
     }
 
-    if (
-      button.dataset.code === 'ShiftLeft' ||
-      button.dataset.code === 'ShiftRight'
-    ) {
-      document.removeEventListener('keydown', keydownHandler);
-      document.removeEventListener('keyup', keyupHandler);
+    if (btn) {
+      const btnCode = btn.dataset.code;
 
-      isShift = false;
-      addButtons(data, language, isCapsLock, isShift);
+      if (btnCode === 'CapsLock') {
+        controlListeners('remove', listeners);
+
+        isCapsLock = !isCapsLock;
+        addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+      } else {
+        btn.classList.remove('active');
+      }
+
+      if (btnCode === 'ShiftLeft') {
+        controlListeners('remove', listeners);
+
+        isLeftShift = false;
+        addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+      }
+
+      if (btnCode === 'ShiftRight') {
+        controlListeners('remove', listeners);
+
+        isRightShift = false;
+        addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+      }
     }
   }
+
+  function clickHandler(e) {
+    e.preventDefault();
+    const { target } = e;
+    const targetCode = target.dataset.code;
+
+    caretPos = textarea.selectionEnd;
+    textareaLength = textarea.value.length;
+
+    let startInput = textarea.value.slice(0, caretPos);
+    let endInput = textarea.value.slice(caretPos, textareaLength);
+
+    if (target) {
+      if (
+        target.classList.contains('char') ||
+        target.classList.contains('digit')
+      ) {
+        textarea.value = startInput + target.textContent + endInput;
+      }
+
+      if (targetCode === 'Tab') {
+        textarea.value = `${startInput}  ${endInput}`;
+      }
+
+      if (targetCode === 'Enter') {
+        textarea.value = `${startInput}\n${endInput}`;
+      }
+
+      if (targetCode === 'Backspace') {
+        startInput = textarea.value.slice(0, caretPos - 1);
+        textarea.value = startInput + endInput;
+      }
+
+      if (targetCode === 'Delete') {
+        endInput = textarea.value.slice(caretPos + 1, textareaLength);
+        textarea.value = startInput + endInput;
+      }
+    }
+  }
+
+  function mousedownHandler(e) {
+    const { target } = e;
+
+    if (target.classList.contains('shift-left')) {
+      controlListeners('remove', listeners);
+
+      isLeftShift = true;
+      addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+    }
+
+    if (target.classList.contains('shift-right')) {
+      controlListeners('remove', listeners);
+
+      isRightShift = true;
+      addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+    }
+  }
+
+  function mouseupHandler(e) {
+    const { target } = e;
+    const targetCode = target.dataset.code;
+
+    if (targetCode === 'CapsLock') {
+      controlListeners('remove', listeners);
+
+      isCapsLock = !isCapsLock;
+      addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+    }
+
+    if (targetCode === 'ShiftLeft') {
+      controlListeners('remove', listeners);
+
+      isLeftShift = false;
+      addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+    }
+
+    if (targetCode === 'ShiftRight') {
+      controlListeners('remove', listeners);
+
+      isRightShift = false;
+      addButtons(data, language, isCapsLock, isLeftShift, isRightShift);
+    }
+  }
+
+  listeners = [
+    ['keydown', keydownHandler],
+    ['keyup', keyupHandler],
+    ['click', clickHandler],
+    ['mousedown', mousedownHandler],
+    ['mouseup', mouseupHandler],
+  ];
+
+  controlListeners('add', listeners);
 }
