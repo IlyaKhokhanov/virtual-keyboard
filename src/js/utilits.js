@@ -16,4 +16,9 @@ function addElement(tagName, className) {
   return elem;
 }
 
-export { controlListeners, addElement };
+function setCaret(elem, position) {
+  elem.focus();
+  elem.setSelectionRange(position, position);
+}
+
+export { controlListeners, addElement, setCaret };

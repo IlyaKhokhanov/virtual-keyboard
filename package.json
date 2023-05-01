@@ -2,7 +2,6 @@
   "name": "virtual-keyboard",
   "version": "1.0.0",
   "description": "virtual-keyboard",
-  "main": "index.js",
   "private": true,
   "scripts": {
     "predeploy": "npm run build",
